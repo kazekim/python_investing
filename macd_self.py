@@ -59,6 +59,24 @@ print(type(macd_plot))
 
 mpf.plot(df, type='candle', style='yahoo', addplot=macd_plot)
 
+print(df[df.action.notnull()])
+
+df['action_price'] = df['Open'].shift(-1)
+
+df_txn = df[df.action.notnull()]
+
+print(df_txn)
+
+df_txn['return'] = df_txn['action_price'].pct_change()
+
+print(df_txn)
+
+# play sell only profit
+df_txn[df_txn['action'] == 'sell']['return'].plot(kind='bar')
+
+# play buy only profit
+# df_txn[df_txn['action'] == 'buy']['return'].plot(kind='bar')
+
 
 df.loc[df['action'] == 'buy', 'marker_position'] = df['Low'] * 0.95
 df.loc[df['action'] == 'sell', 'marker_position'] = df['High'] * 1.05
